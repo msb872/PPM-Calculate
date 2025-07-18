@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ابزار PPM پیشرفته</title>
   <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- حذف اسکریپت Chart.js -->
   <style>
     body {
       font-family: Vazir, sans-serif;
@@ -60,9 +60,7 @@
       background-color: #007bff;
       color: white;
     }
-    canvas {
-      margin: 30px auto;
-    }
+    /* حذف استایل canvas */
     #print-btn, #export-btn {
       position: fixed;
       left: 20px;
@@ -101,8 +99,9 @@
     <button onclick="calculate()">✅ محاسبه</button>
     <button onclick="clearTable()">🧹 پاک کردن جدول</button>
 
-    <h2>📊 نمودار مقدار ماده (g)</h2>
-    <canvas id="ppmChart" width="400" height="200"></canvas>
+    <!-- حذف عنوان و تگ canvas نمودار -->
+    <!-- <h2>📊 نمودار مقدار ماده (g)</h2>
+    <canvas id="ppmChart" width="400" height="200"></canvas> -->
 
     <table id="result-table">
       <thead>
@@ -137,17 +136,7 @@
   <button id="export-btn" onclick="exportCSV()">📤</button>
 
   <script>
-    let chart;
-    const ctx = document.getElementById('ppmChart').getContext('2d');
-    const chartData = {
-      labels: [],
-      datasets: [{
-        label: 'مقدار (g)',
-        data: [],
-        backgroundColor: 'rgba(0,123,255,0.5)'
-      }]
-    };
-    chart = new Chart(ctx, { type: 'bar', data: chartData });
+    // حذف کدهای مربوط به نمودار
 
     function updateDateTime() {
       const now = new Date();
@@ -159,47 +148,38 @@
       document.body.classList.toggle("dark-mode");
     }
 
- function calculate() {
-  const ppm = parseFloat(document.getElementById("ppm").value);
-  const purity = parseFloat(document.getElementById("purity").value);
-  let volume = parseFloat(document.getElementById("volume").value);
-  const unit = document.getElementById("volumeUnit").value;
+    function calculate() {
+      const ppm = parseFloat(document.getElementById("ppm").value);
+      const purity = parseFloat(document.getElementById("purity").value);
+      let volume = parseFloat(document.getElementById("volume").value);
+      const unit = document.getElementById("volumeUnit").value;
 
-  if (!ppm || !purity || !volume) {
-    alert("تمام مقادیر را وارد کنید");
-    return;
-  }
+      if (!ppm || !purity || !volume) {
+        alert("تمام مقادیر را وارد کنید");
+        return;
+      }
 
-  // تبدیل حجم به لیتر اگر واحد میلی‌لیتر بود
-  if (unit === "mL") volume = volume / 1000;
+      if (unit === "mL") volume = volume / 1000;
 
-  // محاسبه میلی گرم ماده مؤثر
-  const effective_mg = ppm * volume;
+      const effective_mg = ppm * volume;
+      const total_g = effective_mg / 1000 / (purity / 100);
 
-  // محاسبه گرم ماده کل با توجه به خلوص
-  const total_g = effective_mg / 1000 / (purity / 100);
+      const gDisplay = total_g.toFixed(2);
+      const mgDisplay = (total_g * 1000).toFixed(1);
 
-  // نمایش با 2 رقم اعشار
-  const gDisplay = total_g.toFixed(2);
-  const mgDisplay = (total_g * 1000).toFixed(1);
+      const row = document.createElement("tr");
+      row.innerHTML = `<td>${ppm}</td><td>${purity}</td><td>${volume}${unit}</td><td>${mgDisplay}</td><td>${gDisplay}</td><td><button onclick="this.closest('tr').remove(); saveData();">❌</button></td>`;
+      document.getElementById("result-body").appendChild(row);
 
-  const row = document.createElement("tr");
-  row.innerHTML = `<td>${ppm}</td><td>${purity}</td><td>${volume}${unit}</td><td>${mgDisplay}</td><td>${gDisplay}</td><td><button onclick="this.closest('tr').remove(); saveData();">❌</button></td>`;
-  document.getElementById("result-body").appendChild(row);
+      // حذف بروزرسانی نمودار
+      saveData();
 
-  chartData.labels.push(ppm + " ppm");
-  chartData.datasets[0].data.push(total_g);
-  chart.update();
-  saveData();
-
-  ["ppm", "purity", "volume"].forEach(id => document.getElementById(id).value = "");
-}
+      ["ppm", "purity", "volume"].forEach(id => document.getElementById(id).value = "");
+    }
 
     function clearTable() {
       document.getElementById("result-body").innerHTML = "";
-      chartData.labels = [];
-      chartData.datasets[0].data = [];
-      chart.update();
+      // حذف ریست داده نمودار
       localStorage.removeItem("ppm_data");
     }
 

@@ -1,239 +1,520 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ابزار PPM پیشرفته</title>
+  <title>ابزار PPM پیشرفته – نسخه رنگی و شیک</title>
   <link href="https://cdn.fontcdn.ir/Font/Persian/Vazir/Vazir.css" rel="stylesheet" />
-  <!-- حذف اسکریپت Chart.js -->
   <style>
-    body {
-      font-family: Vazir, sans-serif;
-      direction: rtl;
-      background-color: #f4f4f4;
-      text-align: center;
-      transition: background 0.4s, color 0.4s;
+    :root{
+      --bg: #0f172a;            /* slate-900 */
+      --card: #0b1222aa;        /* glass */
+      --text: #e2e8f0;          /* slate-200 */
+      --muted:#94a3b8;          /* slate-400 */
+      --primary:#22c55e;        /* green-500 */
+      --primary-2:#06b6d4;      /* cyan-500 */
+      --accent:#a855f7;         /* purple-500 */
+      --warn:#f59e0b;           /* amber-500 */
+      --danger:#ef4444;         /* red-500 */
+      --paper:#f4f7ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 16px;
     }
-    .dark-mode {
-      background-color: #222;
-      color: #eee;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; padding:24px;
+      font-family: Vazir, system-ui, sans-serif;
+      background:
+        radial-gradient(1000px 600px at 10% -10%, #0ea5e94d, transparent 60%),
+        radial-gradient(800px 500px at 110% 10%, #22c55e33, transparent 70%),
+        radial-gradient(700px 400px at 50% 120%, #a855f722, transparent 70%),
+        var(--bg);
+      color:var(--text);
     }
-    .container {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      margin: auto;
-      width: 95%;
-      max-width: 650px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+
+    /* Container */
+    .container{
+      width:min(1100px, 96vw);
+      margin-inline:auto;
+      backdrop-filter: blur(12px) saturate(120%);
+      background:linear-gradient(180deg, #0b1222e0, #0b1222b0);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
-    .dark-mode .container {
-      background-color: #333;
-      color: #eee;
+
+    /* Header */
+    .header{
+      position:relative;
+      padding:28px 24px 22px;
+      background:
+        linear-gradient(135deg, #0ea5e980, #22c55e66),
+        linear-gradient(0deg, transparent, #00000022);
+      border-bottom:1px solid rgba(255,255,255,.08);
     }
-    input, select, button {
-      padding: 10px;
-      margin: 5px;
-      border-radius: 5px;
-      font-size: 14px;
+    .title{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap;
     }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
+    .logo{
+      width:42px; height:42px; border-radius:12px;
+      background: conic-gradient(from 0deg, var(--primary), var(--primary-2), var(--accent), var(--primary));
+      box-shadow: 0 6px 14px #22c55e66, inset 0 0 12px #ffffff22;
     }
-    button:hover {
-      background-color: #0056b3;
+    h1{font-size:22px; margin:0}
+    .sub{color:var(--muted); font-size:13px}
+
+    .header-tools{
+      display:flex; gap:10px; align-items:center; margin-top:12px; flex-wrap:wrap;
     }
-    table {
-      margin-top: 20px;
-      width: 100%;
-      border-collapse: collapse;
+    .chip{
+      padding:6px 10px; border-radius:999px; font-size:12px;
+      background:#00000033; border:1px solid #ffffff22; color:#e2e8f0;
     }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      font-size: 13px;
+    .right{
+      margin-inline-start:auto; display:flex; gap:10px; align-items:center;
     }
-    th {
-      background-color: #007bff;
-      color: white;
+    .btn{
+      position:relative;
+      padding:10px 14px; border-radius:12px; border:1px solid #ffffff20;
+      background:#0b1324; color:#e2e8f0; cursor:pointer; font-weight:700;
+      transition: transform .12s ease, box-shadow .2s ease, background .2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,.25);
+      display:flex; align-items:center; gap:8px;
     }
-    /* حذف استایل canvas */
-    #print-btn, #export-btn {
-      position: fixed;
-      left: 20px;
-      bottom: 20px;
-      background-color: #007bff;
-      color: white;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      font-size: 20px;
-      border: none;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-      cursor: pointer;
-      margin-right: 10px;
+    .btn:hover{ transform: translateY(-2px); background:#0e1730; }
+    .btn.primary{
+      background: linear-gradient(135deg, #10b981, #06b6d4);
+      border:0; color:white; box-shadow: 0 8px 24px #06b6d455;
     }
-    #export-btn {
-      left: 80px;
+    .btn.warn{ background: linear-gradient(135deg, #f59e0b, #ef4444); border:0}
+    .btn:active{ transform: translateY(0) scale(.98) }
+
+    /* Grid */
+    .grid{
+      display:grid; gap:16px; padding:20px;
+      grid-template-columns: repeat(12, 1fr);
     }
+    .card{
+      grid-column: span 12;
+      background: linear-gradient(180deg, #0f1a33aa, #0f1a3380);
+      border:1px solid #ffffff14;
+      border-radius: 18px; padding:18px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.25);
+    }
+    @media (min-width:900px){
+      .span-6{grid-column: span 6}
+      .span-4{grid-column: span 4}
+      .span-8{grid-column: span 8}
+    }
+
+    /* Inputs */
+    .row{display:grid; gap:12px; grid-template-columns: repeat(12, 1fr)}
+    .row > .field{grid-column: span 12}
+    @media (min-width:700px){ .row > .field.span-6{grid-column: span 6} .row > .field.span-3{grid-column: span 3}}
+    label{display:block; font-size:12px; color:#a7b0c3; margin-bottom:6px}
+    .input, select{
+      width:100%; padding:12px 14px; border-radius:12px;
+      background:#0a1328; border:1px solid #ffffff22; color:#e7edf7; outline:none;
+      transition:border .2s ease, box-shadow .2s ease, transform .08s ease;
+    }
+    .input:focus, select:focus{ border-color:#22c55eaa; box-shadow:0 0 0 3px #22c55e33 }
+    .input::-webkit-outer-spin-button,.input::-webkit-inner-spin-button{ -webkit-appearance: none; margin:0}
+    .hint{font-size:11px; color:#93a1bb; margin-top:6px}
+
+    /* Table */
+    table{ width:100%; border-collapse: collapse; overflow:hidden; border-radius:14px }
+    th, td{ padding:10px; border-bottom:1px solid #ffffff17; text-align:center; font-size:13px }
+    thead th{ background: linear-gradient(0deg, #0c1733, #0b142d); color:#cfe7ff; position:sticky; top:0 }
+    tbody tr{ transition: background .2s ease }
+    tbody tr:hover{ background:#0e1a33 }
+    .badge{font-size:11px; padding:3px 8px; border-radius:999px; background:#0b1a2f; border:1px solid #ffffff1a; color:#cfe7ff}
+
+    /* Floating actions */
+    .fab{
+      position: fixed; inset-inline-end: 22px; inset-block-end: 22px; display:flex; gap:10px; flex-direction:column;
+    }
+    .fab .btn{border-radius: 50%; width:56px; height:56px; justify-content:center}
+    .fab .btn svg{width:20px; height:20px}
+
+    /* Toast */
+    .toast{
+      position: fixed; inset-inline:0; inset-block-start: 16px; margin-inline:auto;
+      background: #0b1222; border:1px solid #22c55e55; color:#d1fae5;
+      padding:10px 14px; border-radius:14px; width:min(520px, 96vw);
+      box-shadow: 0 10px 24px #0008; opacity:0; transform: translateY(-10px);
+      transition: opacity .25s ease, transform .25s ease;
+      display:flex; align-items:center; gap:10px; justify-content:center; font-size:14px
+    }
+    .toast.show{ opacity:1; transform: translateY(0) }
+
+    /* Clock line */
+    .clock{ color:#cbd5e1; font-size:12px; margin-top:6px }
+
+    /* Light Mode (toggle by class) */
+    .light{
+      --bg:#eef3ff;
+      color:#0f172a;
+      background:
+        radial-gradient(1000px 600px at 10% -10%, #0ea5e922, transparent 60%),
+        radial-gradient(800px 500px at 110% 10%, #22c55e22, transparent 70%),
+        radial-gradient(700px 400px at 50% 120%, #a855f71a, transparent 70%),
+        var(--paper);
+    }
+    .light .container{background:linear-gradient(180deg, #ffffffc2, #ffffffaa); border:1px solid #00000010}
+    .light .card{background:linear-gradient(180deg, #ffffff, #f7fbff); border:1px solid #00000012}
+    .light .input, .light select{background:#ffffff; color:#0f172a; border:1px solid #0000001a}
+    .light thead th{background:linear-gradient(0deg, #f0f7ff, #e8f2ff); color:#0f172a}
+    .light tbody tr:hover{background:#f3f7ff}
+    .light .btn{background:#ffffff11}
   </style>
 </head>
-<body onload="loadData(); updateDateTime()">
+<body>
+  <div class="toast" id="toast">نتیجه محاسبه شد و در جدول ذخیره گردید ✅</div>
 
   <div class="container">
-    <div id="datetime"></div>
-    <button onclick="toggleDarkMode()">🌗 حالت شب/روز</button>
+    <!-- Header -->
+    <div class="header">
+      <div class="title">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>ابزار PPM پیشرفته</h1>
+          <div class="sub">محاسبه PPM ⇄ درصد ⇄ جرم • با پشتیبانی از خلوص و تبدیل واحد</div>
+          <div class="clock" id="datetime"></div>
+        </div>
+      </div>
 
-    <h2>محاسبه مقدار ماده برای PPM</h2>
-    <input type="number" id="ppm" placeholder="PPM مورد نظر" />
-    <input type="number" id="purity" placeholder="درصد خلوص ماده" />
-    <input type="number" id="volume" placeholder="حجم محلول" />
-    <select id="volumeUnit">
-      <option value="mL">میلی‌لیتر</option>
-      <option value="L">لیتر</option>
-    </select>
-    <br />
-    <button onclick="calculate()">✅ محاسبه</button>
-    <button onclick="clearTable()">🧹 پاک کردن جدول</button>
+      <div class="header-tools">
+        <span class="chip">🌗 حالت شب/روز</span>
+        <span class="chip">⏱ میانبر: Enter برای رفتن به فیلد بعدی</span>
+        <div class="right">
+          <button class="btn" id="toggleThemeBtn" title="تغییر حالت رنگ">تغییر تم</button>
+          <button class="btn" id="clearBtn" title="پاک‌سازی جدول">پاک‌سازی نتایج</button>
+        </div>
+      </div>
+    </div>
 
-    <!-- حذف عنوان و تگ canvas نمودار -->
-    <!-- <h2>📊 نمودار مقدار ماده (g)</h2>
-    <canvas id="ppmChart" width="400" height="200"></canvas> -->
+    <!-- Content -->
+    <div class="grid">
+      <!-- Card 1: PPM → مقدار ماده -->
+      <div class="card span-8">
+        <h3 style="margin:0 0 12px 0">محاسبه مقدار ماده از روی PPM</h3>
+        <div class="row" style="margin-top:6px">
+          <div class="field span-3">
+            <label for="ppm">PPM موردنظر</label>
+            <input class="input nav" type="number" id="ppm" placeholder="مثلاً 150" />
+          </div>
+          <div class="field span-3">
+            <label for="purity">خلوص ماده (%)</label>
+            <input class="input nav" type="number" id="purity" placeholder="مثلاً 65" />
+          </div>
+          <div class="field span-3">
+            <label for="volume">حجم محلول</label>
+            <input class="input nav" type="number" id="volume" placeholder="مثلاً 2" />
+          </div>
+          <div class="field span-3">
+            <label for="volumeUnit">واحد حجم</label>
+            <select class="nav" id="volumeUnit">
+              <option value="mL">میلی‌لیتر</option>
+              <option value="L" selected>لیتر</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:10px">
+          <button class="btn primary" id="calcBtn">✅ محاسبه</button>
+          <button class="btn" id="printBtn">🖨 چاپ جدول</button>
+          <button class="btn" id="csvBtn">📤 خروجی CSV</button>
+        </div>
+        <div class="hint">فرمول: g = (PPM × حجم(L)) ÷ (1000 × خلوص/100)</div>
+      </div>
 
-    <table id="result-table">
-      <thead>
-        <tr>
-          <th>PPM</th>
-          <th>خلوص (%)</th>
-          <th>حجم</th>
-          <th>mg</th>
-          <th>g</th>
-          <th>حذف</th>
-        </tr>
-      </thead>
-      <tbody id="result-body"></tbody>
-    </table>
+      <!-- Card 2: درصد ⇄ PPM -->
+      <div class="card span-4">
+        <h3 style="margin:0 0 12px 0">تبدیل درصد و PPM</h3>
+        <div class="row">
+          <div class="field span-6">
+            <label for="percentToPPMInput">درصد ماده (%) → PPM</label>
+            <input class="input nav" type="number" id="percentToPPMInput" placeholder="مثلاً 0.01" />
+          </div>
+          <div class="field span-6">
+            <label for="purityPercentToPPM">خلوص (%)</label>
+            <input class="input nav" type="number" id="purityPercentToPPM" placeholder="مثلاً 65" />
+          </div>
+        </div>
+        <button class="btn" id="percentToPPMBtn">📐 محاسبه PPM</button>
+        <p id="percentToPPMOutput" class="hint" style="margin-top:8px"></p>
+        <div style="height:8px"></div>
+        <div class="row">
+          <div class="field span-6">
+            <label for="ppmToPercentInput">PPM → درصد ماده (%)</label>
+            <input class="input nav" type="number" id="ppmToPercentInput" placeholder="مثلاً 150" />
+          </div>
+          <div class="field span-6">
+            <label for="purityPPMToPercent">خلوص (%)</label>
+            <input class="input nav" type="number" id="purityPPMToPercent" placeholder="مثلاً 65" />
+          </div>
+        </div>
+        <button class="btn" id="ppmToPercentBtn">📐 محاسبه درصد</button>
+        <p id="ppmToPercentOutput" class="hint" style="margin-top:8px"></p>
+      </div>
 
-    <h2>🔁 تبدیل PPM به درصد با خلوص</h2>
-    <input type="number" id="ppmToPercentInput" placeholder="مقدار PPM" />
-    <input type="number" id="purityPPMToPercent" placeholder="درصد خلوص ماده" />
-    <br />
-    <button onclick="convertPPMtoPercent()">📐 محاسبه درصد</button>
-    <p id="ppmToPercentOutput"></p>
+      <!-- Card 3: گرم → PPM -->
+      <div class="card span-6">
+        <h3 style="margin:0 0 12px 0">تبدیل گرم ماده به PPM</h3>
+        <div class="row">
+          <div class="field span-3">
+            <label for="gramsToPPMInput">جرم (g)</label>
+            <input class="input nav" type="number" id="gramsToPPMInput" placeholder="مثلاً 1" />
+          </div>
+          <div class="field span-3">
+            <label for="purityGramsToPPM">خلوص (%)</label>
+            <input class="input nav" type="number" id="purityGramsToPPM" placeholder="مثلاً 65" />
+          </div>
+          <div class="field span-3">
+            <label for="volumeGramsToPPM">حجم</label>
+            <input class="input nav" type="number" id="volumeGramsToPPM" placeholder="مثلاً 2" />
+          </div>
+          <div class="field span-3">
+            <label for="volumeUnitGrams">واحد</label>
+            <select class="nav" id="volumeUnitGrams">
+              <option value="mL">میلی‌لیتر</option>
+              <option value="L" selected>لیتر</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn" id="gramsToPPMBtn">🔹 محاسبه PPM</button>
+        <p id="gramsToPPMOutput" class="hint" style="margin-top:8px"></p>
+      </div>
 
-    <h2>🔁 تبدیل درصد به PPM با خلوص</h2>
-    <input type="number" id="percentToPPMInput" placeholder="درصد ماده" />
-    <input type="number" id="purityPercentToPPM" placeholder="درصد خلوص ماده" />
-    <br />
-    <button onclick="convertPercentToPPM()">📐 محاسبه PPM</button>
-    <p id="percentToPPMOutput"></p>
+      <!-- Card 4: جدول نتایج -->
+      <div class="card span-12">
+        <h3 style="margin:0 0 12px 0">جدول نتایج</h3>
+        <div style="overflow:auto; border-radius:14px; border:1px solid #ffffff14">
+          <table id="result-table">
+            <thead>
+              <tr>
+                <th>PPM</th>
+                <th>خلوص (%)</th>
+                <th>حجم</th>
+                <th>mg</th>
+                <th>g</th>
+                <th>حذف</th>
+              </tr>
+            </thead>
+            <tbody id="result-body"></tbody>
+          </table>
+        </div>
+        <div class="hint" style="margin-top:8px">📝 ردیف‌ها در مرورگر ذخیره می‌شوند و با تازه‌سازی صفحه باقی می‌مانند.</div>
+      </div>
+    </div>
   </div>
 
-  <button id="print-btn" onclick="printResult()">🖨</button>
-  <button id="export-btn" onclick="exportCSV()">📤</button>
+  <!-- Floating Actions -->
+  <div class="fab">
+    <button class="btn" id="scrollTopBtn" title="رفتن به بالا">⬆️</button>
+  </div>
 
   <script>
-    // حذف کدهای مربوط به نمودار
+    // ===== Utilities =====
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
 
-    function updateDateTime() {
+    function showToast(msg){
+      const t = $('#toast');
+      t.textContent = msg || 'انجام شد ✅';
+      t.classList.add('show');
+      setTimeout(()=> t.classList.remove('show'), 1800);
+    }
+
+    function updateDateTime(){
       const now = new Date();
-      document.getElementById("datetime").innerText = "🕒 " + now.toLocaleString('fa-IR');
+      $('#datetime').textContent = '🕒 ' + now.toLocaleString('fa-IR');
       setTimeout(updateDateTime, 1000);
     }
+    updateDateTime();
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark-mode");
+    // ===== Theme toggle =====
+    const toggleThemeBtn = $('#toggleThemeBtn');
+    const THEME_KEY = 'ppm_theme';
+    function applyTheme(theme){
+      document.body.classList.toggle('light', theme === 'light');
+      localStorage.setItem(THEME_KEY, theme);
+    }
+    applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+    toggleThemeBtn.addEventListener('click', ()=>{
+      const cur = document.body.classList.contains('light') ? 'light' : 'dark';
+      applyTheme(cur === 'light' ? 'dark' : 'light');
+    });
+
+    // ===== Keyboard navigation: Enter moves to next field =====
+    function setupEnterFlow(groups){
+      groups.forEach(({selectors, onLast})=>{
+        const nodes = selectors.map(s => $(s)).filter(Boolean);
+        nodes.forEach((el, idx)=>{
+          el.addEventListener('keydown', (e)=>{
+            if(e.key === 'Enter'){
+              e.preventDefault();
+              const next = nodes[idx+1];
+              if(next){ next.focus(); next.select?.(); }
+              else if(typeof onLast === 'function'){ onLast(); }
+            }
+          });
+        });
+      });
     }
 
-    function calculate() {
-      const ppm = parseFloat(document.getElementById("ppm").value);
-      const purity = parseFloat(document.getElementById("purity").value);
-      let volume = parseFloat(document.getElementById("volume").value);
-      const unit = document.getElementById("volumeUnit").value;
+    // Groups definition for Enter flow
+    setupEnterFlow([
+      { selectors:['#ppm','#purity','#volume','#volumeUnit'], onLast: ()=>$('#calcBtn').click() },
+      { selectors:['#percentToPPMInput','#purityPercentToPPM'], onLast: ()=>$('#percentToPPMBtn').click() },
+      { selectors:['#ppmToPercentInput','#purityPPMToPercent'], onLast: ()=>$('#ppmToPercentBtn').click() },
+      { selectors:['#gramsToPPMInput','#purityGramsToPPM','#volumeGramsToPPM','#volumeUnitGrams'], onLast: ()=>$('#gramsToPPMBtn').click() },
+    ]);
 
-      if (!ppm || !purity || !volume) {
-        alert("تمام مقادیر را وارد کنید");
+    // ===== Core Calculations =====
+    function calculate(){
+      const ppm = parseFloat($('#ppm').value);
+      const purity = parseFloat($('#purity').value);
+      let volume = parseFloat($('#volume').value);
+      const unit = $('#volumeUnit').value;
+
+      if ([ppm,purity,volume].some(v=>isNaN(v) || v<=0)) {
+        alert('لطفاً مقادیر معتبر وارد کنید!');
+        return;
+      }
+      const volumeLiters = unit === 'mL' ? volume/1000 : volume;
+
+      // g = (PPM × L) / (1000 × purity/100)
+      const total_g = (ppm * volumeLiters) / (1000 * (purity/100));
+      const total_mg = total_g * 1000;
+
+      const gDisplay = total_g < 0.001 ? total_g.toExponential(2) : total_g.toFixed(3);
+      const mgDisplay = total_mg < 0.01 ? total_mg.toExponential(2) : total_mg.toFixed(2);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><span class="badge">${ppm}</span></td>
+        <td>${purity}</td>
+        <td>${volume} ${unit}</td>
+        <td>${mgDisplay}</td>
+        <td>${gDisplay}</td>
+        <td><button class="btn warn" style="padding:6px 10px; border-radius:10px">حذف</button></td>
+      `;
+      tr.querySelector('button').addEventListener('click', ()=>{
+        tr.remove(); saveData(); showToast('ردیف حذف شد 🗑️');
+      });
+      $('#result-body').appendChild(tr);
+      saveData();
+      showToast('نتیجه محاسبه شد و ذخیره گردید ✅');
+
+      // clear inputs except unit
+      ['#ppm','#purity','#volume'].forEach(s=> $(s).value='');
+      $('#ppm').focus();
+    }
+
+    function convertPPMtoPercent(){
+      const ppm = parseFloat($('#ppmToPercentInput').value);
+      const purity = parseFloat($('#purityPPMToPercent').value);
+      if([ppm,purity].some(v=>isNaN(v) || v<=0)){
+        alert('لطفاً عدد معتبر برای PPM و خلوص وارد کنید.');
+        return;
+      }
+      const percent = (ppm * purity) / 1_000_000;
+      const displayValue = percent < 0.0001 ? '< 0.0001٪ (بسیار کم)' : `${percent.toFixed(4)}٪`;
+      $('#ppmToPercentOutput').textContent = `درصد ماده مؤثر: ${displayValue}`;
+      showToast('محاسبه درصد انجام شد');
+    }
+
+    function convertPercentToPPM(){
+      const percent = parseFloat($('#percentToPPMInput').value);
+      const purity = parseFloat($('#purityPercentToPPM').value);
+      if([percent,purity].some(v=>isNaN(v) || v<=0)){
+        alert('درصد و خلوص را وارد کنید.');
+        return;
+      }
+      const ppm = (percent * 1_000_000) / purity;
+      $('#percentToPPMOutput').textContent = `مقدار PPM = ${ppm.toFixed(2)} ppm`;
+      showToast('محاسبه PPM از درصد انجام شد');
+    }
+
+    function convertGramsToPPM(){
+      const grams = parseFloat($('#gramsToPPMInput').value);
+      const purity = parseFloat($('#purityGramsToPPM').value);
+      let volume = parseFloat($('#volumeGramsToPPM').value);
+      const unit = $('#volumeUnitGrams').value;
+
+      if([grams,purity,volume].some(v=>isNaN(v) || v<=0)){
+        alert('لطفاً مقادیر معتبر وارد کنید!');
         return;
       }
 
-      if (unit === "mL") volume = volume / 1000;
-
-      const effective_mg = ppm * volume;
-      const total_g = effective_mg / 1000 / (purity / 100);
-
-      const gDisplay = total_g.toFixed(2);
-      const mgDisplay = (total_g * 1000).toFixed(1);
-
-      const row = document.createElement("tr");
-      row.innerHTML = `<td>${ppm}</td><td>${purity}</td><td>${volume}${unit}</td><td>${mgDisplay}</td><td>${gDisplay}</td><td><button onclick="this.closest('tr').remove(); saveData();">❌</button></td>`;
-      document.getElementById("result-body").appendChild(row);
-
-      // حذف بروزرسانی نمودار
-      saveData();
-
-      ["ppm", "purity", "volume"].forEach(id => document.getElementById(id).value = "");
+      const volumeLiters = unit === 'mL' ? volume/1000 : volume;
+      // ppm = (grams * 1000 * purity) / (L * 100)
+      const ppm = (grams * 1000 * purity) / (volumeLiters * 100);
+      $('#gramsToPPMOutput').textContent = `غلظت محلول = ${ppm.toFixed(2)} ppm`;
+      showToast('تبدیل گرم به PPM انجام شد');
     }
 
-    function clearTable() {
-      document.getElementById("result-body").innerHTML = "";
-      // حذف ریست داده نمودار
-      localStorage.removeItem("ppm_data");
+    // ===== Persistence & Actions =====
+    function saveData(){ localStorage.setItem('ppm_data', $('#result-body').innerHTML) }
+    function loadData(){
+      const saved = localStorage.getItem('ppm_data');
+      if(saved){
+        $('#result-body').innerHTML = saved;
+        // re-bind delete buttons after load
+        $$('#result-body button').forEach(btn=>{
+          btn.addEventListener('click', (e)=>{ e.target.closest('tr').remove(); saveData(); showToast('ردیف حذف شد 🗑️'); });
+        });
+      }
     }
+    loadData();
 
-    function printResult() {
+    // Print / CSV / Clear
+    function printResult(){
       const w = window.open();
-      w.document.write(`<html><head><title>چاپ</title></head><body>${document.getElementById("result-table").outerHTML}</body></html>`);
-      w.document.close();
-      w.print();
+      const css = `
+        <style>
+          body{font-family: Vazir, sans-serif; padding:12px}
+          table{width:100%; border-collapse:collapse}
+          th,td{border:1px solid #ccc; padding:6px; text-align:center}
+          th{background:#e8f2ff}
+          .badge{background:#eef; padding:2px 6px; border-radius:10px}
+        </style>`;
+      w.document.write(`<html><head><title>چاپ</title>${css}</head><body>${$('.card span-12') ? $('.card span-12').innerHTML : $('#result-table').outerHTML}</body></html>`);
+      w.document.close(); w.focus(); w.print(); w.close();
     }
-
-    function exportCSV() {
+    function exportCSV(){
       let csv = "PPM,خلوص,حجم,mg,g\n";
-      document.querySelectorAll("#result-body tr").forEach(row => {
-        const cells = row.querySelectorAll("td");
-        csv += `${cells[0].innerText},${cells[1].innerText},${cells[2].innerText},${cells[3].innerText},${cells[4].innerText}\n`;
+      $$('#result-body tr').forEach(row=>{
+        const t = row.querySelectorAll('td');
+        const ppmTxt = t[0].innerText.replace(/[^0-9.\-]/g,''); // remove badge extras
+        csv += `${ppmTxt},${t[1].innerText},${t[2].innerText},${t[3].innerText},${t[4].innerText}\n`;
       });
-      const blob = new Blob([csv], { type: "text/csv" });
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
       const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "ppm_results.csv";
-      a.click();
+      a.href = URL.createObjectURL(blob); a.download = "ppm_results.csv"; a.click();
+      showToast('فایل CSV آماده شد 📄');
     }
-
-    function saveData() {
-      localStorage.setItem("ppm_data", document.getElementById("result-body").innerHTML);
-    }
-
-    function loadData() {
-      const saved = localStorage.getItem("ppm_data");
-      if (saved) document.getElementById("result-body").innerHTML = saved;
-    }
-
-    function convertPPMtoPercent() {
-      const ppm = parseFloat(document.getElementById("ppmToPercentInput").value);
-      const purity = parseFloat(document.getElementById("purityPPMToPercent").value);
-      if (!isNaN(ppm) && !isNaN(purity) && ppm > 0 && purity > 0) {
-        const percent = (ppm * purity) / 1_000_000;
-        let displayValue = percent < 0.0001 ? "< 0.0001٪ (بسیار کم)" : `${percent.toFixed(3)}٪`;
-        document.getElementById("ppmToPercentOutput").innerText = `درصد ماده مؤثر: ${displayValue}`;
-      } else {
-        alert("لطفاً عدد معتبر برای PPM و خلوص وارد کنید.");
+    function clearTable(){
+      if(confirm('همه نتایج حذف شوند؟')){
+        $('#result-body').innerHTML = '';
+        localStorage.removeItem('ppm_data');
+        showToast('جدول پاک شد');
       }
     }
 
-    function convertPercentToPPM() {
-      const percent = parseFloat(document.getElementById("percentToPPMInput").value);
-      const purity = parseFloat(document.getElementById("purityPercentToPPM").value);
-      if (!isNaN(percent) && !isNaN(purity) && percent > 0 && purity > 0) {
-        const ppm = (percent * 1_000_000) / purity;
-        document.getElementById("percentToPPMOutput").innerText = `مقدار PPM = ${ppm.toFixed(2)} ppm`;
-      } else {
-        alert("درصد و خلوص را وارد کنید.");
-      }
-    }
+    // Scroll top
+    $('#scrollTopBtn').addEventListener('click', ()=> window.scrollTo({top:0, behavior:'smooth'}));
+
+    // Bind buttons
+    $('#calcBtn').addEventListener('click', calculate);
+    $('#percentToPPMBtn').addEventListener('click', convertPercentToPPM);
+    $('#ppmToPercentBtn').addEventListener('click', convertPPMtoPercent);
+    $('#gramsToPPMBtn').addEventListener('click', convertGramsToPPM);
+    $('#printBtn').addEventListener('click', printResult);
+    $('#csvBtn').addEventListener('click', exportCSV);
+    $('#clearBtn').addEventListener('click', clearTable);
   </script>
 </body>
 </html>
